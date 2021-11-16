@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+
+</body>
+</html>
+<script>
+class Comparator {
+  /**
+   * Constructor.
+   * @param {function(a: *, b: *)} [compareFunction] - It may be custom compare function that, let's
+   * say may compare custom objects together.
+   */
+  constructor(compareFunction) {
+    this.compare = compareFunction || Comparator.defaultCompareFunction;
+  }
+
+  /**
+   * Default comparison function. It just assumes that "a" and "b" are strings or numbers.
+   * @param {(string|number)} a
+   * @param {(string|number)} b
+   * @returns {number}
+   */
+  static defaultCompareFunction(a, b) {
+    if (a === b) {
+      return 0;
+    }
+
+    return a < b ? -1 : 1;
+  }
+
+  /**
+   * Checks if two variables are equal.
+   * @param {*} a
+   * @param {*} b
+   * @return {boolean}
+   */
+  equal(a, b) {
+    return this.compare(a, b) === 0;
+  }
+
+  /**
+   * Checks if variable "a" is less than "b".
+   * @param {*} a
+   * @param {*} b
+   * @return {boolean}
+   */
+  lessThan(a, b) {
+    return this.compare(a, b) < 0;
+  }
+
+  /**
+   * Checks if variable "a" is greater than "b".
+   * @param {*} a
+   * @param {*} b
+   * @return {boolean}
+   */
+  greaterThan(a, b) {
+    return this.compare(a, b) > 0;
+  }
+
+  /**
+   * Checks if variable "a" is less than or equal to "b".
+   * @param {*} a
+   * @param {*} b
+   * @return {boolean}
+   */
+  lessThanOrEqual(a, b) {
+    return this.lessThan(a, b) || this.equal(a, b);
+  }
+
+  /**
+   * Checks if variable "a" is greater than or equal to "b".
+   * @param {*} a
+   * @param {*} b
+   * @return {boolean}
+   */
+  greaterThanOrEqual(a, b) {
+    return this.greaterThan(a, b) || this.equal(a, b);
+  }
+
+  /**
+   * Reverses the comparison order.
+   */
+  reverse() {
+    const compareOriginal = this.compare;
+    this.compare = (a, b) => compareOriginal(b, a);
+  }
+}
+
+class Sort {
+  constructor(originalCallbacks) {
+    this.callbacks = Sort.initSortingCallbacks(originalCallbacks);
+    this.comparator = new Comparator(this.callbacks.compareCallback);
+  }
+
+  /**
+   * @param {SorterCallbacks} originalCallbacks
+   * @returns {SorterCallbacks}
+   */
+  static initSortingCallbacks(originalCallbacks) {
+    const callbacks = originalCallbacks || {};
+    const stubCallback = () => {
+    };
+
+    callbacks.compareCallback = callbacks.compareCallback || undefined;
+    callbacks.visitingCallback = callbacks.visitingCallback || stubCallback;
+
+    return callbacks;
+  }
+
+  sort() {
+    throw new Error('sort method must be implemented');
+  }
+}
+
+class MergeSort extends Sort {
+  sort(originalArray) {
+    // If array is empty or consists of one element then return this array since it is sorted.
+    // 如果数组为空或由一个元素组成，则返回此数组，因为它已排序。
+    if (originalArray.length <= 1) {
+      return originalArray;
+    }
+
+    // Split array on two halves.
+    const middleIndex = Math.floor(originalArray.length / 2);
+    const leftArray = originalArray.slice(0, middleIndex);
+    const rightArray = originalArray.slice(middleIndex, originalArray.length);
+
+    // Sort two halves of split array
+    const leftSortedArray = this.sort(leftArray);
+    const rightSortedArray = this.sort(rightArray);
+
+    // Merge two sorted arrays into one.
+    return this.mergeSortedArrays(leftSortedArray, rightSortedArray);
+  }
+
+  mergeSortedArrays(leftArray, rightArray) {
+    const sortedArray = [];
+
+    // Use array pointers to exclude old elements after they have been added to the sorted array.
+    let leftIndex = 0;
+    let rightIndex = 0;
+
+    while (leftIndex < leftArray.length && rightIndex < rightArray.length) {
+      let minElement = null;
+
+      // Find the minimum element between the left and right array.
+      if (this.comparator.lessThanOrEqual(leftArray[leftIndex], rightArray[rightIndex])) {
+        minElement = leftArray[leftIndex];
+        // Increment index pointer to the right
+        leftIndex += 1;
+      } else {
+        minElement = rightArray[rightIndex];
+        // Increment index pointer to the right
+        rightIndex += 1;
+      }
+
+      // Add the minimum element to the sorted array.
+      sortedArray.push(minElement);
+    }
+
+    // There will be elements remaining from either the left OR the right
+    // Concatenate the remaining elements into the sorted array
+    return sortedArray
+      .concat(leftArray.slice(leftIndex))
+      .concat(rightArray.slice(rightIndex));
+  }
+}
+
+const notSortedArr = [4, 1, 8, 5, 7, 2, 3, 6];
+const sorter = new MergeSort();
+
+console.log(sorter.sort(notSortedArr));
+</script>
