@@ -1,4 +1,4 @@
-import comparator from './comparator';
+import comparator from './Comparator';
 import dayjs from 'dayjs';
 import MergeSort from '../algorithms/sorting/merge-sort/MergeSort';
 

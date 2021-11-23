@@ -1,4 +1,4 @@
-import Comparator, { IComparator } from '../../../utils/comparator';
+import Comparator, { IComparator } from '../../../utils/Comparator';
 
 export default class MergeSort {
   comparator: IComparator;

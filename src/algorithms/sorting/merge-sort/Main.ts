@@ -1,6 +1,6 @@
 import MergeSort from './MergeSort';
-import ArrayGenerator from '../../../utils/arrayGenerator';
-import SortingHelper, { sortName } from '../../../utils/sortingHelper';
+import ArrayGenerator from '../../../utils/ArrayGenerator';
+import SortingHelper, { sortName } from '../../../utils/SortingHelper';
 
 const dataSize = [100000, 1000000, 10000000];
 
