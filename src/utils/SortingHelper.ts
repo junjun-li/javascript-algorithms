@@ -1,6 +1,5 @@
 import comparator from './Comparator';
-import dayjs from 'dayjs';
-import MergeSort from '../algorithms/sorting/merge-sort/MergeSort';
+import MergeSort from '/algorithms/sorting/merge-sort/MergeSort';
 
 export enum sortName {
   MergeSort = 'MergeSort'

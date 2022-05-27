@@ -1,12 +1,6 @@
-import Comparator, { IComparator } from '../../../utils/Comparator';
+import Sort from '../Sort'
 
-export default class MergeSort {
-  comparator: IComparator;
-
-  constructor() {
-    this.comparator = new Comparator();
-  }
-
+class MergeSort extends Sort {
   sort(originalArray: number[]): number[] {
     // 如果这个数组是空的或者只有一个元素,则返回此数组,因为已经排好序了
     if (originalArray.length <= 1) {
@@ -19,10 +13,13 @@ export default class MergeSort {
     const rightArray = originalArray.slice(middleIndex, originalArray.length);
 
     // 将切割好的数组进行排序
-    const leftSortedArray: number[] = this.sort(leftArray);
-    const rightSortedArray: number[] = this.sort(rightArray);
+    const leftSortedArray = this.sort(leftArray);
+    const rightSortedArray = this.sort(rightArray);
 
     // 将两个已排序的数组合并成数组
+    if (leftSortedArray.length === 1 && rightSortedArray.length === 1 && leftSortedArray[0] < rightSortedArray[0]) {
+      return ([] as number[]).concat(leftSortedArray).concat(rightSortedArray);
+    }
     return this.merge(leftSortedArray, rightSortedArray);
   }
 
@@ -51,4 +48,4 @@ export default class MergeSort {
   }
 }
 
-
+export default MergeSort;
